@@ -3,6 +3,7 @@ import Login from './pages/login';
 import Main from './pages/main';
 import { BrowserRouter } from 'react-router-dom';
 import Header from './components/header';
+import SearchBar from './components/search_bar';
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path="/" element={<Main />} />
                 <Route path="/login" element={<Login />} />
             </Routes>
+            <SearchBar />
         </BrowserRouter>
     );
 }

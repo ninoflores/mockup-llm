@@ -30,18 +30,22 @@ const Header = () => {
                 <Text>
                     LLM
                 </Text>
-                <MenuRoot>
-      <MenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          Open
-        </Button>
-      </MenuTrigger>
-      <MenuContent>
-        <MenuItem value="/" onClick={() => navigate('/login')}>Log out</MenuItem>
-      </MenuContent>
-    </MenuRoot>
+                <Flex alignItems="center" gap="1rem">
+                    <Text>
+                      MyName
+                    </Text>
+                    <MenuRoot>
+                        <MenuTrigger asChild>
+                            <Button variant="outline" size="sm">
+                                Open
+                            </Button>
+                        </MenuTrigger>
+                        <MenuContent>
+                            <MenuItem value="/" onClick={() => navigate('/login')}>ログアウト</MenuItem>
+                        </MenuContent>
+                    </MenuRoot>
+                </Flex>
             </Flex>
-
         </Box>
     )
 }
