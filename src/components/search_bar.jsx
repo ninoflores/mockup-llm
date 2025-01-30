@@ -1,7 +1,14 @@
 import { Box, Button, Flex, Text, Textarea } from "@chakra-ui/react"
 import { Field } from "../components/ui/field"
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const SearchBar = () => {
+    const location = useLocation();
+    const isLoginPage = location.pathname.includes('login');
+    const navigate = useNavigate();
+
+    if (isLoginPage) return null;
+
     return (
         <Box
             position="fixed"

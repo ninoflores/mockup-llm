@@ -1,4 +1,4 @@
-import { Center, Button, Box, Input, Stack, Heading, Fieldset } from '@chakra-ui/react';
+import { Center, Button, Box, Input, Stack, Heading, Fieldset, Spinner, Flex, Text } from '@chakra-ui/react';
 import { Field } from "../components/ui/field"
 import { Toaster, toaster } from "../components/ui/toaster"
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const toasterHandler = (description, type, duration) => {
@@ -26,27 +27,51 @@ const Login = () => {
         } else if (!emailRegex.test(email)) {
            toasterHandler("Email address is not valid", "error", 3000);
         } else {
-            const promise = new Promise((resolve, reject) => {
-                // Simulate login API call
-                setTimeout(() => {
-                    resolve();
-                }, 2000);
+            handleLogin()
+        }
+    }
+
+    const handleLogin = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch("http://api.llm.localhost:3001/v1/login/auth", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
             });
 
-            promise.then(() => {
-                setTimeout(() => {
-                    navigate("/");
-                }, 1000);
+            const data = await response.json();
+
+            const promise = new Promise(async (resolve, reject) => {
+                // Create a delay promise that always waits 2 seconds
+                const delay = new Promise(r => setTimeout(r, 2000));
+                
+                // Wait for the delay regardless of success/failure
+                await delay;
+
+                if (!response.ok) {
+                    reject(new Error("ログインに失敗しました"));
+                } else {
+                    resolve(data);
+                    navigate(`/`, {state: {id: data.user.id}});
+                }
+
+                setIsLoading(false);
             });
 
             toaster.promise(promise, {
                 success: {
                     title: "Success",
-                    description: "You are logged in",
+                    description: response.status === 200 && data.message,
                 },
                 error: {
-                    title: "ログイン失敗",
-                    description: "メールアドレスまたはパスワードが正しくありません",
+                    title: "Login Failed",
+                    description: response.status === 401 || 403 ? data.message : "Login failed",
                     style: {
                         background: '#ff0000',
                         color: 'white',
@@ -56,15 +81,13 @@ const Login = () => {
                 loading: { 
                     title: "Signing in...", 
                     description: "Please wait",
-                    status: 'loading',
-                    style: {
-                        background: '#008cff',
-                        color: 'white',
-                        borderRadius: '8px',
-                    },
-                    duration: 2000,
+                    status: 'loading'
                 },
             });
+
+        } catch (error) {
+            console.error(error);
+            // Error is already handled by toaster.promise
         }
     }
 
@@ -127,13 +150,27 @@ const Login = () => {
                             width="calc(100% - 175px)"
                             ml={'auto'}
                             py={8}
-                            fontSize="lg"
-                            fontWeight={'bold'}
                             borderRadius="10px"
                             _hover={{
                                 bg: "#0077b5",
-                            }}>
-                            ログイン
+                            }}
+                            disabled={isLoading}>
+                            {isLoading ? (
+                                <Flex alignItems="center" justifyContent="center" gap={4}>
+                                    <Spinner size="md" borderWidth="4px" />
+                                    <Text
+                                        fontSize="lg"
+                                        fontWeight={'bold'}>
+                                        Signing in...
+                                    </Text>
+                                </Flex>
+                            ) : (
+                                <Text
+                                    fontSize="lg"
+                                    fontWeight={'bold'}>
+                                    ログイン
+                                </Text>
+                            )}
                         </Button>
                     </Fieldset.Root>
                 </form>
