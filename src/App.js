@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Header from './components/header';
 import SearchBar from './components/search_bar';
 import UserManagement from './pages/user_management';
-
+import SettingManagement from './pages/setting_management';
 function App() {
     return (
         <BrowserRouter>
@@ -17,7 +17,8 @@ function App() {
 function AppContent() {
     const location = useLocation();
     const isLoginPage = location.pathname === '/login';
-
+    const isUserManagementPage = location.pathname === '/user_management';
+    const isSettingManagementPage = location.pathname === '/setting';
     return (
         <>
             {!isLoginPage && <Header />}
@@ -25,8 +26,9 @@ function AppContent() {
                 <Route path="/" element={<Main />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/user_management" element={<UserManagement />} />
+                <Route path="/setting" element={<SettingManagement />} />
             </Routes>
-            {!isLoginPage && <SearchBar />}
+            {!isLoginPage && !isUserManagementPage && !isSettingManagementPage && <SearchBar />}
         </>
     );
 }

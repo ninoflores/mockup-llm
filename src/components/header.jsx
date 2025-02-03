@@ -56,19 +56,28 @@ const Header = () => {
             bg="#fff"
             borderBottom="1px solid #000"
             w="100%"
-            h="100px">
+            h="100px"
+            position="fixed"
+            top={0}
+            left={0}
+            zIndex={100}>
             <Flex 
                 justifyContent="space-between"
                 alignItems="center"
                 w="100%"
                 h="100px"
                 px="100px">
-                <Text>
+                <Text 
+                    cursor="pointer" 
+                    onClick={() => navigate('/')}
+                    fontSize="4xl"
+                    fontWeight="bold"
+                    color="#000">
                     LLM
                 </Text>
                 <Flex alignItems="center" gap="1rem">
                     <Text fontSize="2xl">
-                        {error ? 'Error loading user' : `ようこそ, ${user?.userType == '0' ? '管理者さん' : user?.name}`}
+                        {error ? 'Error loading user' : `ようこそ, ${user?.userType === '0' ? '管理者さん' : user?.name}`}
                     </Text>
                     <MenuRoot>
                         <MenuTrigger asChild>
@@ -77,14 +86,16 @@ const Header = () => {
                             </IconButton>
                         </MenuTrigger>
                         <MenuContent px={6} py={2}>
-                            {user?.userType == 0 ? (
+                            {/* {user?.userType == 0 ? (
                                 <>
                                     <MenuItem value="/user-management" fontSize="xl" py={3} onClick={() => navigate('/user_management')}>ユーザー管理</MenuItem>
                                     <MenuItem value="/setting" fontSize="xl" py={3} onClick={() => navigate('/setting')}>設定</MenuItem>
                                 </>
                             ) : (
                                 <MenuItem fontSize="xl" py={3}>アカウント情報</MenuItem>
-                            )}
+                            )} */}
+                            <MenuItem value="/user-management" fontSize="xl" py={3} onClick={() => navigate('/user_management')}>ユーザー管理</MenuItem>
+                            <MenuItem value="/setting" fontSize="xl" py={3} onClick={() => navigate('/setting')}>設定</MenuItem>
                             <MenuItem value="/" onClick={() => navigate('/login')} fontSize="xl" py={3}>ログアウト</MenuItem>
                         </MenuContent>
                     </MenuRoot>

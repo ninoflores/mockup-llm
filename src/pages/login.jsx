@@ -34,18 +34,18 @@ const Login = () => {
     const handleLogin = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch("http://api.llm.localhost:3001/v1/login/auth", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
+            // const response = await fetch("http://api.llm.localhost:3001/v1/login/auth", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //         email: email,
+            //         password: password
+            //     })
+            // });
 
-            const data = await response.json();
+            // const data = await response.json();
 
             const promise = new Promise(async (resolve, reject) => {
                 // Create a delay promise that always waits 2 seconds
@@ -54,24 +54,30 @@ const Login = () => {
                 // Wait for the delay regardless of success/failure
                 await delay;
 
-                if (!response.ok) {
-                    reject(new Error("ログインに失敗しました"));
-                } else {
-                    resolve(data);
-                    navigate(`/`, {state: {id: data.user.id}});
-                }
+                // if (!response.ok) {
+                //     reject(new Error("ログインに失敗しました"));
+                // } else {
+                //     resolve(data);
+                //     navigate(`/`, {state: {id: data.user.id}});
+                // }
+
+                resolve();
+                navigate(`/`);
 
                 setIsLoading(false);
             });
+            
 
             toaster.promise(promise, {
                 success: {
                     title: "Success",
-                    description: response.status === 200 && data.message,
+                    // description: response.status === 200 && data.message,
+                    description: "Successfully logged in",
                 },
                 error: {
                     title: "Login Failed",
-                    description: response.status === 401 || 403 ? data.message : "Login failed",
+                    // description: response.status === 401 || 403 ? data.message : "Login failed",
+                    description: "Login failed",
                     style: {
                         background: '#ff0000',
                         color: 'white',

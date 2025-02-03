@@ -1,8 +1,8 @@
-import { Button, ButtonGroup, IconButton, Table } from "@chakra-ui/react"
+import { ButtonGroup, IconButton, Table } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { Switch } from "../../components/ui/switch"
-import { MdEdit } from "react-icons/md";
-import { GoTrash } from "react-icons/go";
+import UserModal from "./user-delete-modal";
+import UserForm from "./user-form";
 
 const Demo = () => {
 
@@ -32,48 +32,71 @@ const Demo = () => {
         fetchUsers();
     }, [])
 
-    const handleActiveChange = (userId) => {
-        setUsers(users.map(user => 
-            user.id === userId 
-                ? { ...user, active_flg: user.active_flg === 0 ? 1 : 0 }
-                : user
-        ));
-    };
-
     return (
-        <Table.Root size="sm">
-            <Table.Header>
+        <Table.Root size="sm" mb={10} border={"2px solid #b8b8b8"} showColumnBorder>
+            <Table.Header borderBottom={"2px solid #b8b8b8"}>
                 <Table.Row>
-                    <Table.ColumnHeader>ID</Table.ColumnHeader>
-                    <Table.ColumnHeader>名前</Table.ColumnHeader>
-                    <Table.ColumnHeader>メールアドレス</Table.ColumnHeader>
-                    <Table.ColumnHeader>ユーザータイプ</Table.ColumnHeader>
-                    <Table.ColumnHeader>アクティブ状態</Table.ColumnHeader>
+                    <Table.ColumnHeader 
+                        fontSize={"2xl"} 
+                        py={4} 
+                        borderRight={"2px solid #b8b8b8"}>
+                        ID
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader 
+                        fontSize={"2xl"} 
+                        py={4} 
+                        borderRight={"2px solid #b8b8b8"}>
+                        名前
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader 
+                        fontSize={"2xl"} 
+                        py={4} 
+                        borderRight={"2px solid #b8b8b8"}>
+                        メールアドレス
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader 
+                        fontSize={"2xl"} 
+                        py={4} 
+                        borderRight={"2px solid #b8b8b8"}>
+                        ユーザータイプ
+                    </Table.ColumnHeader>
+                    <Table.ColumnHeader 
+                        fontSize={"2xl"} 
+                        py={4} 
+                        borderRight={"2px solid #b8b8b8"}>
+                        アクティブ状態
+                    </Table.ColumnHeader>
                     <Table.ColumnHeader></Table.ColumnHeader>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {users.map((item) => (
-                    <Table.Row key={item.id}>
-                        <Table.Cell>{item.id}</Table.Cell>
-                        <Table.Cell>{item.disp_name}</Table.Cell>
-                        <Table.Cell>{item.email_address}</Table.Cell>
-                        <Table.Cell>{item.user_type === 0 ? "管理者" : "通常ユーザー" }</Table.Cell>
-                        <Table.Cell>
-                            <Switch 
-                                checked={item.active_flg === 0}
-                                onCheckedChange={() => handleActiveChange(item.id)}
-                                colorPalette={"green"}
-                            />
+                {[
+                    { id: 1, name: "山田太郎", email: "yamada@test.com", type: "管理者", active: true },
+                    { id: 2, name: "鈴木花子", email: "suzuki@test.com", type: "一般", active: true },
+                    { id: 3, name: "佐藤次郎", email: "sato@test.com", type: "管理者", active: false },
+                    { id: 4, name: "田中美咲", email: "tanaka@test.com", type: "一般", active: true },
+                    { id: 5, name: "伊藤健一", email: "ito@test.com", type: "一般", active: false },
+                ].map((user) => (
+                    <Table.Row key={user.id} borderBottom={"2px solid #b8b8b8"}>
+                        <Table.Cell fontSize={"lg"} borderRight={"2px solid #b8b8b8"} w="100px">
+                            {user.id}
+                        </Table.Cell>
+                        <Table.Cell fontSize={"lg"} borderRight={"2px solid #b8b8b8"} w="100px">
+                            {user.name}
+                        </Table.Cell>
+                        <Table.Cell fontSize={"lg"} borderRight={"2px solid #b8b8b8"}>
+                            {user.email}
+                        </Table.Cell>
+                        <Table.Cell fontSize={"lg"} borderRight={"2px solid #b8b8b8"}>
+                            {user.type}
+                        </Table.Cell>
+                        <Table.Cell borderRight={"2px solid #b8b8b8"}>
+                            <Switch checked={user.active} colorPalette={"green"} />
                         </Table.Cell>
                         <Table.Cell>
                             <ButtonGroup>
-                                <IconButton colorPalette={"blue"} borderRadius={"full"}>
-                                    <MdEdit />
-                                </IconButton>
-                                <IconButton colorPalette={"none"} borderRadius={"full"}>
-                                    <GoTrash color="red" />
-                                </IconButton>
+                                <UserForm mode={"edit"}/>
+                                <UserModal />
                             </ButtonGroup>
                         </Table.Cell>
                     </Table.Row>
